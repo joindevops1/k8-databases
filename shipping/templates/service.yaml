@@ -1,19 +1,14 @@
-apiVersion: autoscaling/v2
-kind: HorizontalPodAutoscaler
+apiVersion: v1
+kind: Service
 metadata:
   name: shipping
   namespace: roboshop
 spec:
-  scaleTargetRef:
-    apiVersion: apps/v1
-    kind: Deployment
-    name: shipping
-  minReplicas: 1
-  maxReplicas: 10
-  metrics:
-  - type: Resource
-    resource:
-      name: cpu
-      target:
-        type: Utilization
-        averageUtilization: {{ .Values.hpa.averageUtilization}}
+  selector:
+    app: shipping
+    project: roboshop
+    tier: app
+  ports:
+  - protocol: TCP
+    port: 8080 #service-port
+    targetPort: 8080 #container-port
